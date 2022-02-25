@@ -1,4 +1,4 @@
-import { MotiView } from "moti";
+import { MotiView, MotiImage } from "moti";
 import { Feather } from "@expo/vector-icons";
 import styled from "styled-components/native";
 
@@ -22,6 +22,8 @@ export const BottomCurve = styled.View`
 export const BottomCircle = styled.View`
   width: 65px;
   height: 65px;
+  align-items: center;
+  justify-content: center;
   border-radius: 60px;
   background: ${({ theme }) => theme.colors.flame_gold};
   position: absolute;
@@ -29,7 +31,13 @@ export const BottomCircle = styled.View`
   top: -55px;
 `;
 
-export const BottomContent = styled.View`
+export const BottomCircleIcon = styled(MotiImage)`
+  height: 40%;
+  width: 40%;
+  tint-color: black;
+`;
+
+export const BottomContent = styled(MotiView)`
   width: 90%;
   flex-direction: row;
   align-items: center;
@@ -49,7 +57,6 @@ export const ArrowsView = styled.View`
 export const Arrow = styled(Feather).attrs({
   name: "chevron-right",
 })`
-  color: white;
   font-size: 22px;
   margin-left: -5px;
 `;
