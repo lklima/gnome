@@ -10,30 +10,30 @@ export const BottomContainer = styled(MotiView)`
 `;
 
 export const BottomCurve = styled.View`
-  width: 150px;
-  height: 150px;
+  width: 130px;
+  height: 130px;
   background: ${({ theme }) => theme.colors.botttom_bar};
   border-top-left-radius: 140px;
   border-top-right-radius: 140px;
-  transform: scaleX(3.4);
+  transform: scaleX(3.6);
   position: absolute;
 `;
 
 export const BottomCircle = styled.View`
-  width: 65px;
-  height: 65px;
+  width: 63px;
+  height: 63px;
   align-items: center;
   justify-content: center;
   border-radius: 60px;
   background: ${({ theme }) => theme.colors.flame_gold};
   position: absolute;
   z-index: 999;
-  top: -55px;
+  top: -48px;
 `;
 
 export const BottomCircleIcon = styled(MotiImage)`
-  height: 40%;
-  width: 40%;
+  height: 35%;
+  width: 35%;
   tint-color: black;
 `;
 
@@ -47,7 +47,7 @@ export const BottomContent = styled(MotiView)`
 export const BottomText = styled.Text`
   color: white;
   font-size: 22px;
-  font-weight: bold;
+  font-family: ${({ theme }) => theme.fonts.bold};
 `;
 
 export const ArrowsView = styled.View`

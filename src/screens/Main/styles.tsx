@@ -1,4 +1,4 @@
-import { MotiText } from "moti";
+import { MotiImage, MotiText, MotiView } from "moti";
 import styled from "styled-components/native";
 
 export const Container = styled.View`
@@ -12,34 +12,28 @@ export const Content = styled.View`
   justify-content: center;
 `;
 
-export const Bottom = styled.View`
-  width: 100%;
+export const StarContent = styled(MotiView)`
+  width: 55px;
+  border-radius: 80px;
   align-items: center;
+  background: white;
   position: absolute;
-  bottom: -5px;
-`;
-
-export const RateTitleView = styled.View`
-  background: ${({ theme }) => theme.colors.flame_gold};
-  height: 20px;
-  width: 100px;
-  padding: 0 10px;
-  margin-bottom: -25px;
-`;
-
-export const RateTitleText = styled(MotiText)`
-  font-size: 16px;
-`;
-
-export const RateValueView = styled.View`
-  background: ${({ theme }) => theme.colors.flame_gold};
-  height: 55px;
-  width: 200px;
-  padding: 0 10px;
-`;
-
-export const RateValueText = styled(MotiText)`
-  font-size: 55px;
-  font-weight: bold;
+  left: 30px;
+  top: 150px;
   overflow: hidden;
+  padding-top: 18px;
+  z-index: 9999;
+`;
+
+export const StarText = styled(MotiText)`
+  color: ${({ theme }) => theme.colors.botttom_bar};
+  font-weight: bold;
+  font-size: 20px;
+  position: absolute;
+`;
+
+export const Avatar = styled(MotiImage).attrs({
+  resizeMode: "contain",
+})`
+  height: 350px;
 `;

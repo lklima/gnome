@@ -10,7 +10,10 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@expo-google-fonts/jost": "^0.2.2",
+    "@expo-google-fonts/outfit": "^0.2.2",
     "expo": "~44.0.0",
+    "expo-font": "~10.0.4",
     "expo-status-bar": "~1.2.0",
     "moti": "^0.17.1",
     "react": "17.0.1",
