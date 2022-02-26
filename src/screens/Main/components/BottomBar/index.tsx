@@ -1,15 +1,19 @@
 import React from "react";
+import { useWindowDimensions } from "react-native";
 
 import * as S from "./styles";
 
 import icon from "../../../../assets/caveira.png";
 
+import Bottom from "../../../../assets/bottomFill.svg";
+
 interface Props {
-  color: string;
   tintColor: string;
 }
 
-export default function BottomBar({ color, tintColor }: Props) {
+export default function BottomBar({ tintColor }: Props) {
+  const { width } = useWindowDimensions();
+
   return (
     <S.BottomContainer
       from={{ translateY: 100 }}
@@ -17,7 +21,7 @@ export default function BottomBar({ color, tintColor }: Props) {
       delay={1000}
       transition={{ type: "timing", duration: 600 }}
     >
-      <S.BottomCircle currentColor={color}>
+      <S.BottomCircle>
         <S.BottomCircleIcon
           source={icon}
           tintColor={tintColor}
@@ -26,7 +30,7 @@ export default function BottomBar({ color, tintColor }: Props) {
           delay={1600}
         />
       </S.BottomCircle>
-      <S.BottomCurve />
+      <Bottom width={width} color="white" style={{ position: "absolute" }} />
       <S.BottomContent
         delay={1000}
         from={{ translateY: 80, opacity: 0 }}

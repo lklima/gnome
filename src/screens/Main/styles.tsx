@@ -8,10 +8,6 @@ interface TransitionProps {
   tintColor: string;
 }
 
-export const Container = styled(MotiView)`
-  flex: 1;
-`;
-
 export const Content = styled.View`
   flex: 1;
   align-items: center;

@@ -1,15 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { CountUp } from "use-count-up";
 
 import * as S from "./styles";
 
 interface Props {
-  isCounting: boolean;
-  wins: number;
+  currentWins: number;
   tintColor: string;
 }
 
-export default function BottomContent({ isCounting, wins, tintColor }: Props) {
+export default function BottomContent({ currentWins, tintColor }: Props) {
+  const [isCounting, setIsCounting] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => setIsCounting(true), 1600);
+  }, []);
+
   return (
     <S.Container>
       <S.RateTitleView
@@ -27,7 +32,14 @@ export default function BottomContent({ isCounting, wins, tintColor }: Props) {
         transition={{ type: "timing", duration: 600 }}
       >
         <S.RateValueText tintColor={tintColor}>
-          <CountUp isCounting={isCounting} end={wins} duration={3.2} />%
+          <CountUp
+            key={`${currentWins}`}
+            isCounting={isCounting}
+            start={currentWins - 40}
+            end={currentWins}
+            duration={3}
+          />
+          %
         </S.RateValueText>
       </S.RateValueView>
     </S.Container>

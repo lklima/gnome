@@ -16,6 +16,8 @@ export const Container = styled.View`
 export const TitleContent = styled.View`
   margin-bottom: 8px;
   overflow: hidden;
+  background: gray;
+  height: 80px;
 `;
 
 export const Title = styled(MotiText)<ColorProps>`

@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
-import BottomBar from "./components/BottomBar";
 import { GestureDetector, Directions, Gesture } from "react-native-gesture-handler";
 import { Fontisto } from "@expo/vector-icons";
-import { ImageSourcePropType } from "react-native";
-import { useAnimationState, useDynamicAnimation } from "moti";
+import { ImageSourcePropType, StatusBar } from "react-native";
+import { useDynamicAnimation } from "moti";
+import Animated, { useSharedValue, useAnimatedStyle } from "react-native-reanimated";
 
 import * as S from "./styles";
 
 import BottomContent from "./components/BottomContent";
+import BottomBar from "./components/BottomBar";
 import HeaderText from "./components/HeaderText";
 import Header from "./components/Header";
 
 import data from "../../data";
 
-interface Gnome {
+export interface Gnome {
   name: string;
   description: string;
   wins: number;
@@ -24,37 +25,27 @@ interface Gnome {
 }
 
 export default function Main() {
-  const [isCounting, setIsCounting] = useState(false);
   const [gnome, setGnome] = useState<Gnome>(data[0]);
-  const [_, setIndex] = useState(0);
+  const [index, setIndex] = useState(0);
   const [firstSlide, setFisrtSlide] = useState(false);
+  const backgroundColor = useSharedValue(gnome.color);
 
   const transition = useDynamicAnimation();
-
-  const content = useDynamicAnimation(() => {
-    return {
-      backgroundColor: "green",
-      height: 500,
-    };
-  });
+  const animationContainer = useAnimatedStyle(() => ({
+    backgroundColor: backgroundColor.value,
+  }));
 
   const tintColor = gnome.tintBlack ? "black" : "white";
-
-  useEffect(() => {
-    setTimeout(() => setIsCounting(true), 1600);
-  }, []);
 
   useEffect(() => {
     if (firstSlide) {
       transition.animateTo({
         scale: [3, 0],
-        backgroundColor: "red",
       });
-      console.log(gnome);
 
-      content.animateTo({
-        backgroundColor: "gray",
-      });
+      setTimeout(() => {
+        backgroundColor.value = gnome.color;
+      }, 500);
     }
   }, [gnome, firstSlide]);
 
@@ -75,21 +66,18 @@ export default function Main() {
   const flingGestureLeft = Gesture.Fling().direction(Directions.LEFT).onEnd(handleSlide);
 
   return (
-    <S.Container from={{ backgroundColor: "gray" }} animate={{ backgroundColor: "red" }}>
+    <Animated.View style={[{ flex: 1 }, animationContainer]}>
+      <StatusBar barStyle={gnome.tintBlack ? "dark-content" : "light-content"} />
       <GestureDetector gesture={flingGestureLeft}>
         <S.Content>
           <S.Transition
             from={{ scale: 0 }}
             state={transition}
-            transition={{ type: "timing", duration: 2000 }}
+            transition={{ type: "timing", duration: 500 }}
             tintColor={gnome.color}
           />
           <Header tintColor={tintColor} />
-          <HeaderText
-            title={gnome.name}
-            subTitle={gnome.description}
-            tintColor={tintColor}
-          />
+          <HeaderText gnome={gnome} data={data} index={index} tintColor={tintColor} />
           <S.StarContent
             delay={2000}
             from={{ scale: 0, height: 60 }}
@@ -125,14 +113,10 @@ export default function Main() {
               ],
             }}
           />
-          <BottomContent
-            isCounting={isCounting}
-            wins={gnome.wins}
-            tintColor={tintColor}
-          />
+          <BottomContent currentWins={gnome.wins} tintColor={tintColor} />
         </S.Content>
       </GestureDetector>
-      <BottomBar color={gnome.color} tintColor={tintColor} />
-    </S.Container>
+      <BottomBar tintColor={tintColor} />
+    </Animated.View>
   );
 }
