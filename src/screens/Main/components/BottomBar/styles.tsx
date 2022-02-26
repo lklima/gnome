@@ -2,6 +2,14 @@ import { MotiView, MotiImage } from "moti";
 import { Feather } from "@expo/vector-icons";
 import styled from "styled-components/native";
 
+interface CircleProps {
+  currentColor: string;
+}
+
+interface IconProps {
+  tintColor: string;
+}
+
 export const BottomContainer = styled(MotiView)`
   height: 130px;
   width: 100%;
@@ -19,22 +27,22 @@ export const BottomCurve = styled.View`
   position: absolute;
 `;
 
-export const BottomCircle = styled.View`
+export const BottomCircle = styled.View<CircleProps>`
   width: 63px;
   height: 63px;
   align-items: center;
   justify-content: center;
   border-radius: 60px;
-  background: ${({ theme }) => theme.colors.flame_gold};
+  background: ${({ currentColor, theme }) => currentColor || theme.colors.flame_gold};
   position: absolute;
   z-index: 999;
   top: -48px;
 `;
 
-export const BottomCircleIcon = styled(MotiImage)`
+export const BottomCircleIcon = styled(MotiImage)<IconProps>`
   height: 35%;
   width: 35%;
-  tint-color: black;
+  tint-color: ${({ tintColor }) => tintColor};
 `;
 
 export const BottomContent = styled(MotiView)`

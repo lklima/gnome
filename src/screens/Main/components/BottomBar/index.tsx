@@ -4,7 +4,12 @@ import * as S from "./styles";
 
 import icon from "../../../../assets/caveira.png";
 
-export default function BottomBar() {
+interface Props {
+  color: string;
+  tintColor: string;
+}
+
+export default function BottomBar({ color, tintColor }: Props) {
   return (
     <S.BottomContainer
       from={{ translateY: 100 }}
@@ -12,9 +17,10 @@ export default function BottomBar() {
       delay={1000}
       transition={{ type: "timing", duration: 600 }}
     >
-      <S.BottomCircle>
+      <S.BottomCircle currentColor={color}>
         <S.BottomCircleIcon
           source={icon}
+          tintColor={tintColor}
           from={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           delay={1600}

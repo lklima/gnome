@@ -1,69 +1,138 @@
 import React, { useEffect, useState } from "react";
 import BottomBar from "./components/BottomBar";
 import { GestureDetector, Directions, Gesture } from "react-native-gesture-handler";
-import { GestureDetector as GestDetec } from "react-native-gesture-handler";
 import { Fontisto } from "@expo/vector-icons";
+import { ImageSourcePropType } from "react-native";
+import { useAnimationState, useDynamicAnimation } from "moti";
 
 import * as S from "./styles";
 
-import flameGnome from "../../assets/flame.png";
-
 import BottomContent from "./components/BottomContent";
+import HeaderText from "./components/HeaderText";
+import Header from "./components/Header";
+
+import data from "../../data";
+
+interface Gnome {
+  name: string;
+  description: string;
+  wins: number;
+  stars: number;
+  avatar: ImageSourcePropType;
+  color: string;
+  tintBlack?: boolean;
+}
 
 export default function Main() {
   const [isCounting, setIsCounting] = useState(false);
+  const [gnome, setGnome] = useState<Gnome>(data[0]);
+  const [_, setIndex] = useState(0);
+  const [firstSlide, setFisrtSlide] = useState(false);
+
+  const transition = useDynamicAnimation();
+
+  const content = useDynamicAnimation(() => {
+    return {
+      backgroundColor: "green",
+      height: 500,
+    };
+  });
+
+  const tintColor = gnome.tintBlack ? "black" : "white";
 
   useEffect(() => {
     setTimeout(() => setIsCounting(true), 1600);
   }, []);
 
-  const flingGestureLeft = Gesture.Fling()
-    .direction(Directions.LEFT)
-    .onEnd((e) => console.log("I was swiped left!"));
+  useEffect(() => {
+    if (firstSlide) {
+      transition.animateTo({
+        scale: [3, 0],
+        backgroundColor: "red",
+      });
+      console.log(gnome);
 
-  const flingGestureRight = Gesture.Fling()
-    .direction(Directions.RIGHT)
-    .onEnd((e) => console.log("I was swiped right!"));
+      content.animateTo({
+        backgroundColor: "gray",
+      });
+    }
+  }, [gnome, firstSlide]);
+
+  function handleSlide() {
+    if (!firstSlide) setFisrtSlide(true);
+
+    setIndex((prev) => {
+      if (prev < data.length - 1) {
+        setGnome(data[prev + 1]);
+        return prev + 1;
+      }
+
+      setGnome(data[0]);
+      return 0;
+    });
+  }
+
+  const flingGestureLeft = Gesture.Fling().direction(Directions.LEFT).onEnd(handleSlide);
 
   return (
-    <S.Container>
+    <S.Container from={{ backgroundColor: "gray" }} animate={{ backgroundColor: "red" }}>
       <GestureDetector gesture={flingGestureLeft}>
-        <GestDetec gesture={flingGestureRight}>
-          <S.Content>
-            <S.StarContent
-              delay={2000}
-              from={{ scale: 0 }}
-              animate={{
-                scale: 1,
-                height: [
-                  { value: 60, type: "timing", delay: 0 },
-                  { value: 80, type: "timing", delay: 400 },
-                ],
-              }}
-              transition={{ type: "timing", duration: 200 }}
+        <S.Content>
+          <S.Transition
+            from={{ scale: 0 }}
+            state={transition}
+            transition={{ type: "timing", duration: 2000 }}
+            tintColor={gnome.color}
+          />
+          <Header tintColor={tintColor} />
+          <HeaderText
+            title={gnome.name}
+            subTitle={gnome.description}
+            tintColor={tintColor}
+          />
+          <S.StarContent
+            delay={2000}
+            from={{ scale: 0, height: 60 }}
+            animate={{
+              scale: 1,
+              height: [
+                { value: 60, type: "timing", delay: 0 },
+                { value: 80, type: "timing", delay: 400 },
+              ],
+            }}
+            transition={{ type: "timing", duration: 200 }}
+          >
+            <Fontisto name="star" size={22} />
+            <S.StarText
+              delay={2200}
+              from={{ opacity: 0, top: 20 }}
+              animate={{ opacity: 1, top: 45 }}
+              transition={{ type: "timing", duration: 500 }}
             >
-              <Fontisto name="star" size={22} />
-              <S.StarText
-                delay={2200}
-                from={{ opacity: 0, top: 20 }}
-                animate={{ opacity: 1, top: 45 }}
-                transition={{ type: "timing", duration: 300 }}
-              >
-                9.1
-              </S.StarText>
-            </S.StarContent>
-            <S.Avatar
-              source={flameGnome}
-              delay={2000}
-              from={{ translateX: 400, opacity: 0 }}
-              animate={{ translateX: 30, opacity: 1 }}
-              transition={{ type: "spring" }}
-            />
-            <BottomContent isCounting={isCounting} wins={93} />
-          </S.Content>
-        </GestDetec>
+              {gnome.stars}
+            </S.StarText>
+          </S.StarContent>
+          <S.Avatar
+            source={gnome.avatar}
+            delay={2000}
+            from={{ translateX: 400, opacity: 0 }}
+            animate={{
+              translateX: 40,
+              opacity: 1,
+              scale: [
+                { value: 0.8, delay: 0 },
+                { value: 1, type: "timing", duration: 3000, delay: 1000 },
+              ],
+            }}
+          />
+          <BottomContent
+            isCounting={isCounting}
+            wins={gnome.wins}
+            tintColor={tintColor}
+          />
+        </S.Content>
       </GestureDetector>
-      <BottomBar />
+      <BottomBar color={gnome.color} tintColor={tintColor} />
     </S.Container>
   );
 }

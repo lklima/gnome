@@ -6,29 +6,30 @@ import * as S from "./styles";
 interface Props {
   isCounting: boolean;
   wins: number;
+  tintColor: string;
 }
 
-export default function BottomContent({ isCounting, wins }: Props) {
+export default function BottomContent({ isCounting, wins, tintColor }: Props) {
   return (
     <S.Container>
-      <S.RateTitleText
+      <S.RateTitleView
         delay={2000}
-        from={{ translateY: 20 }}
-        animate={{ translateY: 0 }}
+        from={{ height: 0 }}
+        animate={{ height: 20 }}
         transition={{ type: "timing", duration: 600 }}
       >
-        Win rate
-      </S.RateTitleText>
-      <S.RateTitleView />
-      <S.RateValueText
+        <S.RateTitleText tintColor={tintColor}>Win rate</S.RateTitleText>
+      </S.RateTitleView>
+      <S.RateValueView
         delay={1700}
-        from={{ translateY: 55 }}
-        animate={{ translateY: 0 }}
+        from={{ height: 0 }}
+        animate={{ height: 55 }}
         transition={{ type: "timing", duration: 600 }}
       >
-        <CountUp isCounting={isCounting} end={wins} duration={3.2} />%
-      </S.RateValueText>
-      <S.RateValueView />
+        <S.RateValueText tintColor={tintColor}>
+          <CountUp isCounting={isCounting} end={wins} duration={3.2} />%
+        </S.RateValueText>
+      </S.RateValueView>
     </S.Container>
   );
 }
