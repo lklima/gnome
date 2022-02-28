@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useWindowDimensions } from "react-native";
 
 import * as S from "./styles";
@@ -12,10 +12,15 @@ interface Props {
 
 export default function BottomBar({ tintColor }: Props) {
   const { width } = useWindowDimensions();
+  const [translateY, setTranslateY] = useState(100);
+
+  useEffect(() => {
+    setTimeout(() => setTranslateY(0), 1000);
+  }, []);
 
   return (
     <S.BottomContainer
-      from={{ translateY: 100 }}
+      from={{ translateY }}
       animate={{ translateY: 0 }}
       delay={1000}
       transition={{ type: "timing", duration: 600 }}

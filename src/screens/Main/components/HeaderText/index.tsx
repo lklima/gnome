@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from "react";
+import { FlatList } from "react-native";
 
 import { Gnome } from "../..";
 
 import * as S from "./styles";
-import { FlatList } from "react-native-gesture-handler";
 
 interface Props {
   index: number;
