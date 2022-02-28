@@ -37,7 +37,7 @@ export default function BottomContent({ currentWins, tintColor }: Props) {
             isCounting={isCounting}
             start={currentWins - 40}
             end={currentWins}
-            duration={3}
+            duration={1}
           />
           %
         </S.RateValueText>
