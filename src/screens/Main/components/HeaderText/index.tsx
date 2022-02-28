@@ -1,56 +1,59 @@
-import { useAnimationState } from "moti";
-import React from "react";
+import React, { useEffect, useRef } from "react";
+
 import { Gnome } from "../..";
 
 import * as S from "./styles";
+import { FlatList } from "react-native-gesture-handler";
 
 interface Props {
-  gnome: Gnome;
   index: number;
   data: Gnome[];
   tintColor: string;
 }
 
-export default function HeaderText({ gnome, data, index, tintColor }: Props) {
-  const currentGnome = data[index];
-  const currentNameAnimate = useAnimationState({
-    toUp: {
-      translateY: 80,
-    },
-  });
+export default function HeaderText({ data, index, tintColor }: Props) {
+  const nameListRef = useRef<FlatList>(null);
+  const descListRef = useRef<FlatList>(null);
+
+  useEffect(() => {
+    nameListRef.current?.scrollToIndex({ index, animated: true });
+    setTimeout(() => {
+      descListRef.current?.scrollToIndex({ index, animated: true });
+    }, 150);
+  }, [index]);
 
   return (
     <S.Container>
-      <S.TitleContent>
-        <S.Title
-          delay={1000}
-          tintColor={tintColor}
-          from={{ translateY: 75 }}
-          animate={{ translateY: 0 }}
-          transition={{ type: "timing", duration: 600 }}
-          state={currentNameAnimate}
-        >
-          {gnome.name}
-        </S.Title>
-        <S.Title
-          delay={1000}
-          tintColor={tintColor}
-          from={{ translateY: 75 }}
-          animate={{ translateY: 0 }}
-          transition={{ type: "timing", duration: 600 }}
-        >
-          Teste
-        </S.Title>
-      </S.TitleContent>
-      <S.SubTitle
-        delay={1500}
-        tintColor={tintColor}
-        from={{ translateY: 18 }}
-        animate={{ translateY: 0 }}
+      <S.TitleContent
+        delay={1000}
+        from={{ paddingTop: 80 }}
+        animate={{ paddingTop: 0 }}
         transition={{ type: "timing", duration: 600 }}
       >
-        {gnome.description}
-      </S.SubTitle>
+        <FlatList
+          ref={nameListRef}
+          data={data}
+          keyExtractor={(item) => item.name}
+          renderItem={({ item }) => <S.Title tintColor={tintColor}>{item.name}</S.Title>}
+          scrollEnabled={false}
+        />
+      </S.TitleContent>
+      <S.SubTitleContent
+        delay={1200}
+        from={{ paddingTop: 22 }}
+        animate={{ paddingTop: 0 }}
+        transition={{ type: "timing", duration: 600 }}
+      >
+        <FlatList
+          ref={descListRef}
+          data={data}
+          keyExtractor={(item) => item.name}
+          renderItem={({ item }) => (
+            <S.SubTitle tintColor={tintColor}>{item.description}</S.SubTitle>
+          )}
+          scrollEnabled={false}
+        />
+      </S.SubTitleContent>
     </S.Container>
   );
 }

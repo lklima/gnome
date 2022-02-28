@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { GestureDetector, Directions, Gesture } from "react-native-gesture-handler";
-import { Fontisto } from "@expo/vector-icons";
 import { ImageSourcePropType, StatusBar } from "react-native";
 import { useDynamicAnimation } from "moti";
-import Animated, { useSharedValue, useAnimatedStyle } from "react-native-reanimated";
+import { useSharedValue, useAnimatedStyle } from "react-native-reanimated";
 
 import * as S from "./styles";
 
@@ -11,6 +10,8 @@ import BottomContent from "./components/BottomContent";
 import BottomBar from "./components/BottomBar";
 import HeaderText from "./components/HeaderText";
 import Header from "./components/Header";
+import Star from "./components/Star";
+import Avatar from "./components/Avatar";
 
 import data from "../../data";
 
@@ -22,12 +23,16 @@ export interface Gnome {
   avatar: ImageSourcePropType;
   color: string;
   tintBlack?: boolean;
+  offsetX?: number;
+  offsetY?: number;
+  height?: number;
 }
 
 export default function Main() {
   const [gnome, setGnome] = useState<Gnome>(data[0]);
   const [index, setIndex] = useState(0);
   const [firstSlide, setFisrtSlide] = useState(false);
+  const [tintColor, setTintColor] = useState("black");
   const backgroundColor = useSharedValue(gnome.color);
 
   const transition = useDynamicAnimation();
@@ -35,29 +40,27 @@ export default function Main() {
     backgroundColor: backgroundColor.value,
   }));
 
-  const tintColor = gnome.tintBlack ? "black" : "white";
+  useEffect(() => {
+    setTimeout(() => {
+      setTintColor("black");
+    }, 800);
+  }, []);
 
   useEffect(() => {
     if (firstSlide) {
-      transition.animateTo({
-        scale: [3, 0],
-      });
-
-      setTimeout(() => {
-        backgroundColor.value = gnome.color;
-      }, 500);
+      transition.animateTo({ scale: [3, 0] });
+      setTimeout(() => (backgroundColor.value = gnome.color), 500);
+      setTimeout(() => setTintColor(gnome.tintBlack ? "black" : "white"), 200);
     }
   }, [gnome, firstSlide]);
 
   function handleSlide() {
     if (!firstSlide) setFisrtSlide(true);
-
     setIndex((prev) => {
       if (prev < data.length - 1) {
         setGnome(data[prev + 1]);
         return prev + 1;
       }
-
       setGnome(data[0]);
       return 0;
     });
@@ -66,7 +69,7 @@ export default function Main() {
   const flingGestureLeft = Gesture.Fling().direction(Directions.LEFT).onEnd(handleSlide);
 
   return (
-    <Animated.View style={[{ flex: 1 }, animationContainer]}>
+    <S.Container style={animationContainer}>
       <StatusBar barStyle={gnome.tintBlack ? "dark-content" : "light-content"} />
       <GestureDetector gesture={flingGestureLeft}>
         <S.Content>
@@ -77,46 +80,13 @@ export default function Main() {
             tintColor={gnome.color}
           />
           <Header tintColor={tintColor} />
-          <HeaderText gnome={gnome} data={data} index={index} tintColor={tintColor} />
-          <S.StarContent
-            delay={2000}
-            from={{ scale: 0, height: 60 }}
-            animate={{
-              scale: 1,
-              height: [
-                { value: 60, type: "timing", delay: 0 },
-                { value: 80, type: "timing", delay: 400 },
-              ],
-            }}
-            transition={{ type: "timing", duration: 200 }}
-          >
-            <Fontisto name="star" size={22} />
-            <S.StarText
-              delay={2200}
-              from={{ opacity: 0, top: 20 }}
-              animate={{ opacity: 1, top: 45 }}
-              transition={{ type: "timing", duration: 500 }}
-            >
-              {gnome.stars}
-            </S.StarText>
-          </S.StarContent>
-          <S.Avatar
-            source={gnome.avatar}
-            delay={2000}
-            from={{ translateX: 400, opacity: 0 }}
-            animate={{
-              translateX: 40,
-              opacity: 1,
-              scale: [
-                { value: 0.8, delay: 0 },
-                { value: 1, type: "timing", duration: 3000, delay: 1000 },
-              ],
-            }}
-          />
+          <HeaderText data={data} index={index} tintColor={tintColor} />
+          <Star stars={gnome.stars} />
+          <Avatar data={data} index={index} />
           <BottomContent currentWins={gnome.wins} tintColor={tintColor} />
         </S.Content>
       </GestureDetector>
       <BottomBar tintColor={tintColor} />
-    </Animated.View>
+    </S.Container>
   );
 }

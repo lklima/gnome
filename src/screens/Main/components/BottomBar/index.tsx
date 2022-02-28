@@ -4,7 +4,6 @@ import { useWindowDimensions } from "react-native";
 import * as S from "./styles";
 
 import icon from "../../../../assets/caveira.png";
-
 import Bottom from "../../../../assets/bottomFill.svg";
 
 interface Props {
